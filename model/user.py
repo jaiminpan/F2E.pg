@@ -10,7 +10,7 @@ from lib.query import Query
 class UserModel(Query):
     def __init__(self, db):
         self.db = db
-        self.table_name = "user"
+        self.table_name = "users"
         super(UserModel, self).__init__()
 
     def get_user_by_uid(self, uid):

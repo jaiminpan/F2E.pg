@@ -29,9 +29,8 @@ class NodeModel(Query):
         return self.where(where).find()
 
     def get_all_hot_nodes(self):
-        where = "topic.reply_count > 0"
-        join = "LEFT JOIN topic ON node.id = topic.node_id"
-        order = "topic.reply_count DESC"
-        group = "node.id"
-        return self.where(where).join(join).order(order).group(group).limit(16).select()
+        where = "tmp.reply_count > 0"
+        join = "LEFT JOIN (SELECT node_id, MAX(topic.reply_count) as reply_count FROM topic GROUP BY topic.node_id) tmp ON node.id = tmp.node_id"
+        order = "tmp.reply_count DESC"
+        return self.where(where).join(join).order(order).limit(16).select()
 

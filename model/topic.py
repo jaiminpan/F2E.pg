@@ -15,9 +15,9 @@ class TopicModel(Query):
         super(TopicModel, self).__init__()
 
     def get_all_topics(self, num = 36, current_page = 1):
-        join = "LEFT JOIN user AS author_user ON topic.author_id = author_user.uid \
+        join = "LEFT JOIN users AS author_user ON topic.author_id = author_user.uid \
                 LEFT JOIN node ON topic.node_id = node.id \
-                LEFT JOIN user AS last_replied_user ON topic.last_replied_by = last_replied_user.uid"
+                LEFT JOIN users AS last_replied_user ON topic.last_replied_by = last_replied_user.uid"
         order = "last_touched DESC, created DESC, last_replied_time DESC, id DESC"
         field = "topic.*, \
                 author_user.username as author_username, \
@@ -33,9 +33,9 @@ class TopicModel(Query):
 
     def get_all_topics_by_node_slug(self, num = 36, current_page = 1, node_slug = None):
         where = "node.slug = '%s'" % node_slug
-        join = "LEFT JOIN user AS author_user ON topic.author_id = author_user.uid \
+        join = "LEFT JOIN users AS author_user ON topic.author_id = author_user.uid \
                 LEFT JOIN node ON topic.node_id = node.id \
-                LEFT JOIN user AS last_replied_user ON topic.last_replied_by = last_replied_user.uid"
+                LEFT JOIN users AS last_replied_user ON topic.last_replied_by = last_replied_user.uid"
         order = "last_touched DESC, created DESC, last_replied_time DESC, id DESC"
         field = "topic.*, \
                 author_user.username as author_username, \
@@ -54,9 +54,9 @@ class TopicModel(Query):
 
     def get_user_all_topics(self, uid, num = 36, current_page = 1):
         where = "topic.author_id = %s" % uid
-        join = "LEFT JOIN user AS author_user ON topic.author_id = author_user.uid \
+        join = "LEFT JOIN users AS author_user ON topic.author_id = author_user.uid \
                 LEFT JOIN node ON topic.node_id = node.id \
-                LEFT JOIN user AS last_replied_user ON topic.last_replied_by = last_replied_user.uid"
+                LEFT JOIN users AS last_replied_user ON topic.last_replied_by = last_replied_user.uid"
         order = "id DESC"
         field = "topic.*, \
                 author_user.username as author_username, \
@@ -76,7 +76,7 @@ class TopicModel(Query):
 
     def get_user_all_replied_topics(self, uid, num = 36, current_page = 1):
         where = "reply.uid = %s" % uid
-        join = "LEFT JOIN reply ON topic.id = reply.tid LEFT JOIN user ON topic.uid = user.uid"
+        join = "LEFT JOIN reply ON topic.id = reply.tid LEFT JOIN users ON topic.uid = users.uid"
         order = "topic.id DESC"
         field = "*, topic.created as created"
         group = "tid"
@@ -84,9 +84,9 @@ class TopicModel(Query):
 
     def get_topic_by_topic_id(self, topic_id):
         where = "topic.id = %s" % topic_id
-        join = "LEFT JOIN user AS author_user ON topic.author_id = author_user.uid \
+        join = "LEFT JOIN users AS author_user ON topic.author_id = author_user.uid \
                 LEFT JOIN node ON topic.node_id = node.id \
-                LEFT JOIN user AS last_replied_user ON topic.last_replied_by = last_replied_user.uid"
+                LEFT JOIN users AS last_replied_user ON topic.last_replied_by = last_replied_user.uid"
         field = "topic.*, \
                 author_user.username as author_username, \
                 author_user.nickname as author_nickname, \

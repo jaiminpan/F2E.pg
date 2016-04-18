@@ -71,7 +71,10 @@ class Query(object):
 
             if(self.__check("limit") and statement == "limit"):
                 sql = sql + " LIMIT %s" % self.__protected["__limit"]
-
+#                 word = self.__protected["__limit"].split(",")
+#                 sql = sql + " LIMIT %s" % word[0]
+#                 if len(word) != 1:
+#                     sql = sql + " OFFSET %s" % word[1]
             if(self.__check("group") and statement == "group"):
                 sql = sql + " GROUP BY %s" % self.__protected["__group"]
 
@@ -113,7 +116,7 @@ class Query(object):
         return self
 
     def limit(self, start, end = None):
-        limit = start if not end else "%s, %s" % (start, end)
+        limit = start if not end else "%s OFFSET %s" % (start, end)
         self.__do("limit", limit)
         return self
 
@@ -266,7 +269,7 @@ class Query(object):
         group_having_regx = re.compile("(GROUP|HAVING)", re.I)
 
         if(not group_having_regx.search(sql)):
-            return self.db.get(sql)["COUNT(*)"] if not cheat else sql
+            return self.db.get(sql)["count"] if not cheat else sql
         else:
             return len(self.db.query(sql)) if not cheat else sql
 
@@ -275,7 +278,7 @@ class Query(object):
         sql = self.__sqlbuild(sql, ["where"])
         sql = self.__sqlfix(sql)
         self.__close()
-        return self.db.get(sql)["SUM(%s)" % field] if not cheat else sql
+        return self.db.get(sql)["sum" % field] if not cheat else sql
 
     def find(self, cheat = False):
         try:
